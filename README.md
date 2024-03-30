@@ -1,4 +1,4 @@
-# Denger_Chess
+# Danger_Chess
 
 This project is a chess helper for beginner. This extension will mark every cell on the board if you place a piece on those cell will be captured on the oponnents next move. Those cells will be marked using red square shown below.
 
