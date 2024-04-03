@@ -8,11 +8,28 @@ let dataToSave = {
     opcolor: '#ff0000'
 }
 
-function getData() {
-    chrome.runtime.sendMessage({ action: "getData" }, (result) => {
+// First, create a function that returns a promise which resolves when the message response is received
+function getDataAsync() {
+    return new Promise((resolve, reject) => {
+        chrome.runtime.sendMessage({ action: "getData" }, (result) => {
+            if (chrome.runtime.lastError) {
+                reject(new Error(chrome.runtime.lastError.message));
+            } else {
+                resolve(result);
+            }
+        });
+    });
+}
+
+// Now, use this function with async/await
+async function getData() {
+    try {
+        const result = await getDataAsync();
         // console.log("Received data:", result);
         if (Object.keys(result).length) dataToSave = result;
         // console.log("Data loaded from local storage:", dataToSave);
+
+        // Updating the UI with the retrieved data
         document.getElementById('mycell').checked = dataToSave.mycell;
         document.getElementById('mysign').checked = dataToSave.mysign;
         document.getElementById('mycolor').value = dataToSave.mycolor;
@@ -20,8 +37,9 @@ function getData() {
         document.getElementById('opsign').checked = dataToSave.opsign;
         document.getElementById('opcolor').value = dataToSave.opcolor;
 
-        // Use the retrieved data
-    });
+    } catch (error) {
+        // console.error("Error fetching data:", error.message);
+    }
 }
 
 function sendMessageAsync(message) {
@@ -44,10 +62,10 @@ async function saveData(data) {
         if (response.success) {
             // console.log("Data saved successfully!");
         } else {
-            console.error("Error saving data");
+            // console.error("Error saving data");
         }
     } catch (error) {
-        console.error("Error sending message:", error.message);
+        // console.error("Error sending message:", error.message);
     }
 }
 
@@ -58,7 +76,7 @@ async function saveData(data) {
 //         if (response.success) {
 //             // console.log("Data saved successfully!");
 //         } else {
-//             console.error("Error saving data");
+//             // console.error("Error saving data");
 //         }
 //     });
 // }
@@ -157,7 +175,7 @@ document.onreadystatechange = function () {
         //     // console.log('Data reset to default values.');
         //     chrome.storage.sync.set(dataToSave, function (result) {
         //         if (chrome.runtime.lastError) {
-        //             console.error("Error saving data to local storage:", chrome.runtime.lastError);
+        //             // console.error("Error saving data to local storage:", chrome.runtime.lastError);
         //         } else {
         //             // console.log("Data saved successfully!");
         //         }

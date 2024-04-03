@@ -1,4 +1,39 @@
-//onsole.log("running");
+let dataToSave = {
+    mycell: false,
+    mysign: false,
+    mycolor: '#00ff00',
+    opcell: false,
+    opsign: false,
+    opcolor: '#ff0000'
+}
+
+// First, create a function that returns a promise which resolves when the message response is received
+function getDataAsync() {
+    return new Promise((resolve, reject) => {
+        chrome.runtime.sendMessage({ action: "getData" }, (result) => {
+            if (chrome.runtime.lastError) {
+                reject(new Error(chrome.runtime.lastError.message));
+            } else {
+                resolve(result);
+            }
+        });
+    });
+}
+
+// Now, use this function with async/await
+async function getData() {
+    try {
+        const result = await getDataAsync();
+        // // console.log("Received data:", result);
+        if (Object.keys(result).length) dataToSave = result;
+        // // console.log("Data loaded from local storage:", dataToSave);
+    } catch (error) {
+        // console.error("Error fetching data:", error.message);
+    }
+}
+
+
+// //onsole.log("running");
 function placeRedRectWithinContainer(container, gridIndexX, gridIndexY, totalSquares) {
     // Get the computed style of the container to find its size
     const containerStyle = window.getComputedStyle(container);
@@ -16,15 +51,17 @@ function placeRedRectWithinContainer(container, gridIndexX, gridIndexY, totalSqu
     const redRect = document.createElement('div');
 
     // Set styles for the red rectangle
+
     redRect.style.position = 'absolute';
-    redRect.style.left = (posX + 3) + 'px';
-    redRect.style.top = (posY + 3) + 'px';
-    redRect.style.width = (squareSize - 2 * 3) + 'px';
-    redRect.style.height = (squareSize - 2 * 3) + 'px';
-    redRect.style.border = '3px solid red';
+    redRect.style.left = (posX + 8) + 'px';
+    redRect.style.top = (posY + 8) + 'px';
+    redRect.style.width = (squareSize - 2 * 8) + 'px';
+    redRect.style.height = (squareSize - 2 * 8) + 'px';
+    redRect.style.border = '3px solid ' + dataToSave.mycolor;
     redRect.style.boxSizing = 'border-box';
     redRect.style.backgroundColor = 'transparent';
     redRect.style.pointerEvents = 'none';
+
     // redRect.style.stroke = 'red';
     redRect.style.zIndex = '0'; // Make sure it's above other items in the container
 
@@ -45,8 +82,8 @@ for (let i = 0; i < 8; i++) {
 
 let squares = [];
 let cnt = 0;
-function ok(x, y, grid, mark) {
-    if (grid[x][y] == '.' || mark[x][y] == 'x' || grid[x][y] == 'K') {
+function ok(x, y, grid, mark){
+    if (grid[x][y] == '.' || mark[x][y] == 'x' || grid[x][y] == 'K'){
         return true;
     }
     return false;
@@ -55,16 +92,16 @@ function ok(x, y, grid, mark) {
 // This function will run every time there are changes in the DOM
 function customExtensionUpdate() {
 
+    
 
-
-    //console.log('Changes detected, running custom extension code.');
+    //// console.log('Changes detected, running custom extension code.');
     // Your custom code here
     // perse the height and width of the board
     const cgContainer = document.querySelector('cg-container');
     const style = window.getComputedStyle(cgContainer);
     const height = parseInt(style.getPropertyValue('height'), 10); // Converts height to integer
     const width = parseInt(style.getPropertyValue('width'), 10); // Converts width to integer
-    //console.log('Height:', height, 'Width:', width);
+    //// console.log('Height:', height, 'Width:', width);
 
     const side = height / 8;
 
@@ -77,9 +114,9 @@ function customExtensionUpdate() {
     const gameUrlContent = document.querySelector('meta[property="og:url"]').getAttribute("content");
 
     // Determines the user's color based on the URL
-    const userColor = gameUrlContent.endsWith("/black") ? "black" : "white";
+    const userColor = gameUrlContent.endsWith("/black") ? "white" : "black";
     const opColor = (userColor == 'black') ? 'white' : 'black';
-    //console.log('User is playing as:', userColor);
+    // console.log('User is playing as:', userColor);
 
     // Declaring grid
     let grid = new Array(8);
@@ -121,11 +158,14 @@ function customExtensionUpdate() {
         // Extract the positions from the style string using a regular expression
         const translateRegex = /translate\((\d+px), (\d+px)\)/;
         const match = style.match(translateRegex);
-        
+        // // console.log(b[i].className);
+        // // console.log(match);
+        // // console.log(style);
         // If the translate values are found, parse them to integers and log them
         if (match) {
             const positionX = parseInt(match[1], 10) / side; // Parse the X position
             const positionY = parseInt(match[2], 10) / side; // Parse the Y position
+            //// console.log(`Element: ${b[i].className}, Position X: ${positionX}, Position Y: ${positionY}`);
             if (map.has(b[i].className)) {
                 let row = positionY;
                 let col = positionX;
@@ -135,16 +175,24 @@ function customExtensionUpdate() {
         }
 
     }
-
-    if (JSON.stringify(grid) == JSON.stringify(preGrid)) {
+    // // console.log(grid);
+    // // console.log(preGrid);
+    if(JSON.stringify(grid) == JSON.stringify(preGrid)){
+        // // console.log("same");
         return;
     }
+    // // console.log(cnt);
+    // cnt++;
     for (let i = 0; i < squares.length; i++) {
         squares[i].remove();
     }
 
     squares = [];
+    // // console.log("cleared");
     preGrid = grid;
+    // // console.log(grid);
+    // // console.log(preGrid);
+    // // console.log(b);
 
 
 
@@ -190,7 +238,7 @@ function customExtensionUpdate() {
         while (posx < 7 && flag) {
             posx += 1;
             if (ok(posx, posy, grid, mark)) {
-                mark[posx][posy] = 'x';
+                           mark[posx][posy] = 'x';
             }
             else {
                 mark[posx][posy] = 'X';
@@ -220,7 +268,7 @@ function customExtensionUpdate() {
             posx -= 1;
             posy -= 1;
             if (ok(posx, posy, grid, mark)) {
-                mark[posx][posy] = 'x';
+                           mark[posx][posy] = 'x';
             }
             else {
                 mark[posx][posy] = 'X';
@@ -234,7 +282,7 @@ function customExtensionUpdate() {
             posx -= 1;
             posy += 1;
             if (ok(posx, posy, grid, mark)) {
-                mark[posx][posy] = 'x';
+                           mark[posx][posy] = 'x';
             }
             else {
                 mark[posx][posy] = 'X';
@@ -248,7 +296,7 @@ function customExtensionUpdate() {
             posx += 1;
             posy -= 1;
             if (ok(posx, posy, grid, mark)) {
-                mark[posx][posy] = 'x';
+                           mark[posx][posy] = 'x';
             }
             else {
                 mark[posx][posy] = 'X';
@@ -262,7 +310,7 @@ function customExtensionUpdate() {
             posx += 1;
             posy += 1;
             if (ok(posx, posy, grid, mark)) {
-                mark[posx][posy] = 'x';
+                           mark[posx][posy] = 'x';
             }
             else {
                 mark[posx][posy] = 'X';
@@ -272,8 +320,8 @@ function customExtensionUpdate() {
     }
 
     function pawn(x, y, grid, mark) {
-        if (x + 1 < 8 && y - 1 >= 0) {
-            let posx = x + 1;
+        if (x - 1 >= 0 && y - 1 >= 0) {
+            let posx = x - 1;
             let posy = y - 1;
             if (ok(posx, posy, grid, mark)) {
                 mark[posx][posy] = 'x';
@@ -283,8 +331,8 @@ function customExtensionUpdate() {
                 flag = false;
             }
         }
-        if (x + 1 < 8 && y + 1 < 8) {
-            let posx = x + 1;
+        if (x - 1 >= 0 && y + 1 < 8) {
+            let posx = x - 1;
             let posy = y + 1;
             if (ok(posx, posy, grid, mark)) {
                 mark[posx][posy] = 'x';
@@ -304,7 +352,8 @@ function customExtensionUpdate() {
             let posx = x + dx[i];
             let posy = y + dy[i];
             if (posx < 8 && posx >= 0 && posy < 8 && posy >= 0) {
-                if (ok(posx, posy, grid, mark)) {
+                if (ok(posx, posy, grid, mark))
+                {
                     mark[posx][posy] = 'x';
                 }
                 else {
@@ -351,51 +400,151 @@ function customExtensionUpdate() {
     // pawn(3, 4, grid, mark);
     // horse(3, 4, grid, mark);
     denger(grid, mark);
-    //console.log(mark);
+    //// console.log(mark);
 
-    for (let i = 0; i < 8; i++) {
-        for (let j = 0; j < 8; j++) {
-            if (mark[i][j] == 'X' || mark[i][j] == 'x') {
+    for(let i = 0; i < 8; i++){
+        for(let j = 0; j < 8; j++){
+            if(mark[i][j] == 'X' || mark[i][j] == 'x'){
                 squares.push(placeRedRectWithinContainer(cgContainer, i, j, 8));
             }
         }
     }
 }
 
-document.addEventListener('click', function (event) {
-    for (let i = 0; i < squares.length; i++) {
-        squares[i].remove();
-    }
-    squares = [];
-    preGrid = new Array(8);
-    for (let i = 0; i < 8; i++) {
-        preGrid[i] = new Array(8);
-        for (let j = 0; j < 8; j++) {
-            preGrid[i][j] = '.';
-        }
-    }
-    customExtensionUpdate();
-    Object.keys(window).forEach(key => {
-        if (/^on/.test(key)) { // Check if the property starts with 'on'
-            document.addEventListener(key.slice(2), function (event) {
-                //console.log(`${key} event detected:`, event);
-                customExtensionUpdate();
-            });
-        }
-    });
-});
+// Select the target node to observe
+// const targetNode = document.querySelector('cg-board') || document; // Fallback to document if 'cg-board' does not exist
 
-window.addEventListener('resize', function () {
-    for (let i = 0; i < squares.length; i++) {
-        squares[i].remove();
+// // Options for the observer (which mutations to observe)
+// const config = { attributes: true, childList: true, subtree: true };
+
+// // Callback function to execute when mutations are observed
+// const callback = function (mutationsList, observer) {
+//     for (let mutation of mutationsList) {
+//         if (mutation.type === 'childList' || mutation.type === 'attributes') {
+//             customExtensionUpdate();
+//             // break; // Optional: if you only care about the first mutation
+//         }
+//         // Add other checks for different types of mutations if necessary
+//     }
+// };
+
+// // Create an observer instance linked to the callback function
+// const observer = new MutationObserver(callback);
+
+// // Start observing the target node for configured mutations
+// observer.observe(targetNode, config);
+
+// // Later, you can stop observing
+// // // observer.disconnect();
+// let cnt = 0;
+// // working
+// Object.keys(window).forEach(key => {
+//     if (/^on/.test(key)) { // Check if the property starts with 'on'
+//         document.addEventListener(key.slice(2), function (event) {
+//             //// console.log(`${key} event detected:`, event);
+//             // customExtensionUpdate();
+//             // console.log(cnt);
+//             cnt++;
+//             getData();
+//         });
+//     }
+// });
+
+
+document.onreadystatechange = function () {
+    if(document.readyState === 'complete'){
+        document.addEventListener('click', function (event) {
+
+            for (let i = 0; i < squares.length; i++) {
+                squares[i].remove();
+            }
+            squares = [];
+
+            for (let i = 0; i < opSquares.length; i++) {
+                opSquares[i].remove();
+            }
+            opSquares = [];
+
+            getData();
+            if(dataToSave.mycell){
+                
+                preGrid = new Array(8);
+                for (let i = 0; i < 8; i++) {
+                    preGrid[i] = new Array(8);
+                    for (let j = 0; j < 8; j++) {
+                        preGrid[i][j] = '.';
+                    }
+                }
+                customExtensionUpdate();
+            }
+
+            if(dataToSave.opcell){
+                
+                opPreGrid = new Array(8);
+                for (let i = 0; i < 8; i++) {
+                    opPreGrid[i] = new Array(8);
+                    for (let j = 0; j < 8; j++) {
+                        opPreGrid[i][j] = '.';
+                    }
+                }
+                opCustomExtensionUpdate();
+            }
+
+            Object.keys(window).forEach(key => {
+                if (/^on/.test(key)) { // Check if the property starts with 'on'
+                    document.addEventListener(key.slice(2), function (event) {
+                        if(dataToSave.mycell) customExtensionUpdate();
+                        else{
+                            for (let i = 0; i < squares.length; i++) squares[i].remove();
+                            squares = [];
+                        }
+                        if(dataToSave.opcell) opCustomExtensionUpdate();
+                    });
+                }
+            });
+        });
+
+        window.addEventListener('resize', function () {
+            // Your code to handle resize event goes here
+            // console.log("Window resized!");
+            for (let i = 0; i < squares.length; i++) {
+                squares[i].remove();
+            }
+            squares = [];
+
+            for (let i = 0; i < opSquares.length; i++) {
+                opSquares[i].remove();
+            }
+            opSquares = [];
+            // You can also access the new width and height of the window:
+            const newWidth = window.innerWidth;
+            const newHeight = window.innerHeight;
+            if(dataToSave.mycell){
+                
+                preGrid = new Array(8);
+                for (let i = 0; i < 8; i++) {
+                    preGrid[i] = new Array(8);
+                    for (let j = 0; j < 8; j++) {
+                        preGrid[i][j] = '.';
+                    }
+                }
+                customExtensionUpdate();
+            }
+
+            if(dataToSave.opcell){
+                
+                opPreGrid = new Array(8);
+                for (let i = 0; i < 8; i++) {
+                    opPreGrid[i] = new Array(8);
+                    for (let j = 0; j < 8; j++) {
+                        opPreGrid[i][j] = '.';
+                    }
+                }
+                opCustomExtensionUpdate();
+            }
+            // Use these values to adjust your webpage layout or functionality
+        });
     }
-    squares = [];
-    preGrid = new Array(8);
-    for (let i = 0; i < 8; i++) {
-        preGrid[i] = new Array(8);
-        for (let j = 0; j < 8; j++) {
-            preGrid[i][j] = '.';
-        }
-    }
-    customExtensionUpdate();
-});
+}
+
+
