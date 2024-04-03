@@ -3,7 +3,7 @@ let dataToSave = {
     mycell: false,
     mysign: false,
     mycolor: '#00ff00',
-    opcell: false,
+    opcell: true,
     opsign: false,
     opcolor: '#ff0000'
 }
