@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="popup.js"></script>
+<style>
+
+body{
+  width: 300px; /* Adjust width as needed */
+  height: 410px; /* Adjust height as needed */
+  /* margin: 0px; Remove default margins */
+  padding-left: 10px; /* Remove default padding */
+  padding-right: 10px;
+  padding-bottom: 10px;
+  border: none; /* Remove default border */
+  background-color: #458775;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2ecd0b;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2ecd0b;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+.top{
+  background-color: #5a8892;
+  border-style:ridge;
+  border-color: #9ae5d1;
+  margin-bottom: 10px;
+}
+
+</style>
+</head>
+<body>
+<div style = "height: min-content; display:flex; justify-content:  center;margin-top:-10px">
+  <h2 style = "position: relative;">Danger Chess</h2>
+</div>
+<div class = "top">
+  <lebel style = "padding-top: 10px; display:flex; position: relative; justify-content: center;"> <b>My Settings</b> </lebel>
+  <div style = "display:flex; justify-content: space-between; align-items: center;padding-right: 10px; padding-left: 10px; padding-bottom: 10px; padding-top: 10px;">
+    <lebel style = "position: relative;"> Controlled Cell  </lebel>
+    <label class="switch">
+      <input type="checkbox" id = "mycell">
+      <span class="slider"></span>
+    </label> 
+  </div>
+  <div style = "display:flex; justify-content: space-between; align-items: center;padding-right: 10px; padding-left: 10px; padding-bottom: 10px;">
+    <lebel style = "position: relative;"> Show Square </lebel>
+    <label class="switch">
+      <input type="checkbox" id = "mysign">
+      <span class="slider"></span>
+    </label>
+  </div>
+  <div style = "display:flex; justify-content: space-between; align-items: center;padding-right: 10px; padding-left: 10px; padding-bottom: 10px;">
+    <lebel style = "position: relative;"> Pick a Color </lebel>
+    <input id = "mycolor" style = "height: 34px; width: 60px;" type="color" name="favcolor" value="#00ff00">
+  </div>  
+</div>
+
+
+<div class = "top">
+  <lebel style = "padding-top: 10px; display:flex; position: relative; justify-content: center;"> <b>Opponent Settings </b> </lebel>
+  <div style = "display:flex; justify-content: space-between; align-items: center;padding-right: 10px; padding-left: 10px; padding-bottom: 10px; padding-top: 10px;">
+    <lebel style = "position: relative;"> Controlled Cell  </lebel>
+    <label class="switch">
+      <input type="checkbox" id = "opcell">
+      <span class="slider"></span>
+    </label> 
+  </div>
+  <div style = "display:flex; justify-content: space-between; align-items: center;padding-right: 10px; padding-left: 10px; padding-bottom: 10px;">
+    <lebel style = "position: relative;"> Show Square </lebel>
+    <label class="switch">
+      <input type="checkbox" id = "opsign">
+      <span class="slider"></span>
+    </label>
+  </div>
+  <div style = "display:flex; justify-content: space-between; align-items: center;padding-right: 10px; padding-left: 10px; padding-bottom: 10px;">
+    <lebel style = "position: relative;"> Pick a Color </lebel>
+    <input id = "opcolor" style = "height: 34px; width: 60px;" type="color" name="favcolor" value="#ff0000">
+  </div>  
+</div>
+</body>
+</html> 
