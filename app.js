@@ -37,8 +37,8 @@ async function getData() {
 function placeRedRectWithinContainer(container, gridIndexX, gridIndexY, totalSquares) {
     // Get the computed style of the container to find its size
     const containerStyle = window.getComputedStyle(container);
-    const containerWidth = parseInt(containerStyle.width);
-    const containerHeight = parseInt(containerStyle.height);
+    const containerWidth = parseFloat(containerStyle.width);
+    const containerHeight = parseFloat(containerStyle.height);
 
     // Calculate the size of each square
     const squareSize = containerWidth / totalSquares; // Assuming a square grid
@@ -99,8 +99,8 @@ function customExtensionUpdate() {
     // perse the height and width of the board
     const cgContainer = document.querySelector('cg-container');
     const style = window.getComputedStyle(cgContainer);
-    const height = parseInt(style.getPropertyValue('height'), 10); // Converts height to integer
-    const width = parseInt(style.getPropertyValue('width'), 10); // Converts width to integer
+    const height = parseFloat(style.getPropertyValue('height'), 10); // Converts height to integer
+    const width = parseFloat(style.getPropertyValue('width'), 10); // Converts width to integer
     //// console.log('Height:', height, 'Width:', width);
 
     const side = height / 8;
@@ -156,19 +156,20 @@ function customExtensionUpdate() {
         const style = b[i].getAttribute('style');
 
         // Extract the positions from the style string using a regular expression
-        const translateRegex = /translate\((\d+px), (\d+px)\)/;
+        const translateRegex = /translate\((\d+(\.\d+)?px), (\d+(\.\d+)?px)\)/;
+
         const match = style.match(translateRegex);
         // // console.log(b[i].className);
         // // console.log(match);
         // // console.log(style);
         // If the translate values are found, parse them to integers and log them
         if (match) {
-            const positionX = parseInt(match[1], 10) / side; // Parse the X position
-            const positionY = parseInt(match[2], 10) / side; // Parse the Y position
+            const positionX = parseFloat(match[1]) / side; // Parse the X position
+            const positionY = parseFloat(match[3]) / side; // Parse the Y position
             //// console.log(`Element: ${b[i].className}, Position X: ${positionX}, Position Y: ${positionY}`);
             if (map.has(b[i].className)) {
-                let row = positionY;
-                let col = positionX;
+                let row = Math.round(positionY);
+                let col = Math.round(positionX);
 
                 grid[row][col] = map.get(b[i].className);
             }

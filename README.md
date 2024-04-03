@@ -1,7 +1,9 @@
 # Danger Chess
 
 ## Project Description
-<div style="text-align: justify;"><b>Danger Chess</b> is a Chrome extension built on the <a href="https://lichess.org">Lichess</a> online chess platform. Danger Chess is intended for beginning chess players who are struggling to improve their skills. The extension will assist users in avoiding silly mistakes such as playing pieces into cells that can be captured by the opponent in a single move. To prevent these errors, the extension will highlight the cells where the opponent can capture the piece in the next move. The extension will have many customisation options for the user to choose from, such as the colour of the highlight and which perspective controlled cell will be shown. </div>
+<div style="text-align: justify;"><b>Danger Chess</b> is a Chrome extension built on the <a href="https://lichess.org">Lichess</a> online chess platform. <b>Danger Chess</b> is intended for <b>beginner</b> chess players who are struggling to improve their skills. The extension will assist users in avoiding silly mistakes such as playing pieces into cells that can be captured by the opponent in a single move. To prevent these errors, the extension will highlight the cells where the opponent can capture the piece in the next move. The extension will have many customisation options for the user to choose from, such as the colour of the highlight and whose perspective controlled cell will be highlighted.<br><br><br></div>
+
+![gif](DangerChessDemo.gif)
 
 ## Features
 
@@ -48,4 +50,3 @@
     1. [Abu Huraira Mridha](https://www.linkedin.com/in/abu-huraira-mridha-ba2ba4184/)
     2. [Md Joy Hossain](https://www.linkedin.com/in/md-joy-hossain-aabba128b/)
 
-    
