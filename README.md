@@ -15,6 +15,8 @@
 
 - <b>TODO: Select the shape of the highlight.</b>
 
+- <b>TODO: Cells that king controlls are not highlighted.</b>
+
 
 ## How to Install
 1. Downloading
